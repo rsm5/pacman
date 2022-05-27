@@ -1,6 +1,6 @@
 # pacman
 
- Pac-Man, o famoso "joguinho do come-come" (como é conhecido no Brasil) e um dos maiores clássicos dos videogames. Lançado em maio no Japão, Pac-Man chegaria aos Estados Unidos em outubro de 1980. E foi lá que ele realmente explodiu, tornando-se posteriormente um sucesso mundial. [4]
+ Pac-Man, o famoso "joguinho do come-come" (como é conhecido no Brasil) é um dos maiores clássicos dos videogames. Lançado em maio de 1980 no Japão, Pac-Man chegaria aos Estados Unidos em outubro de 1980. E foi lá que ele realmente explodiu, tornando-se posteriormente um sucesso mundial. [4]
  
  O objetivo deste repositório é criar agentes para a versão clássica do Pacman, incluindo fantasmas utilizando algoritmos clássicos em inteligência artificial tais como Reflex Agent, Alpha-Beta Pruning e Expectimax [3]. 
 

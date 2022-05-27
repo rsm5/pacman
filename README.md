@@ -1,10 +1,14 @@
 # pacman
 
+ Pac-Man, o famoso "joguinho do come-come" (como é conhecido no Brasil) e um dos maiores clássicos dos videogames. Lançado em maio no Japão, Pac-Man chegaria aos Estados Unidos em outubro de 1980. E foi lá que ele realmente explodiu, tornando-se posteriormente um sucesso mundial. [4]
+ 
+ O objetivo deste repositório é criar agentes para a versão clássica do Pacman, incluindo fantasmas utilizando algoritmos clássicos em inteligência artificial tais como Reflex Agent, Alpha-Beta Pruning e Expectimax [3]. 
+
 ---
 ## Configuração do Anaconda e virtual environment para a versão 2.7
 ---
 
-Requirements
+Requirements [1]
  - Anaconda Python distribution installed and accessible
 
 1 - Check conda is installed and in your PATH: conda -V
@@ -47,5 +51,6 @@ Requirements
 ---
        [1] eResearch cookbook - 2 minute recipes for scientists. Create virtual environments for python with conda. Disponível em: https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/
        [2] LIMA, Cloves. Multi-agentes - PACMAN. Disponível em: https://drive.google.com/file/d/1stEVjqcCrpc_DDMrlhmXpV0n-b-nKMMy/view
-       [3] UC Berkeley. Project 2: Multi-Agent Search. Disponível em: http://ai.berkeley.edu/multiagent.html
+       [3] UC Berkeley. Project 2: Multi-Agent Search. Disponível em: http://ai.berkeley.edu/multiagent.html       
+       [4] Tecmundo. 42 anos de Pac-Man: conheça tudo sobre o game. Disponível em: https://www.tecmundo.com.br/voxel/237159-42-anos-pac-man-conheca-tudo-game.htm
 

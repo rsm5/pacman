@@ -1,10 +1,11 @@
+# coding=utf-8
 # multiAgents.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -19,62 +20,179 @@ import random, util
 from game import Agent
 
 class ReflexAgent(Agent):
-    """
-      A reflex agent chooses an action at each choice point by examining
-      its alternatives via a state evaluation function.
+	"""
+		A reflex agent chooses an action at each choice point by examining
+		its alternatives via a state evaluation function.
 
-      The code below is provided as a guide.  You are welcome to change
-      it in any way you see fit, so long as you don't touch our method
-      headers.
-    """
+		The code below is provided as a guide.  You are welcome to change
+		it in any way you see fit, so long as you don't touch our method
+		headers.
+	"""
+
+	def getAction(self, gameState):
+		"""
+		You do not need to change this method, but you're welcome to.
+
+		getAction chooses among the best options according to the evaluation function.
+
+		Just like in the previous project, getAction takes a GameState and returns
+		some Directions.X for some X in the set {North, South, West, East, Stop}
+		"""
+		# Collect legal moves and successor states
+		legalMoves = gameState.getLegalActions()
+
+		# Choose one of the best actions
+		scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
+		bestScore = max(scores)
+		bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+		chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
+		"Add more of your code here if you want to"
+
+		return legalMoves[chosenIndex]
+
+	def evaluationFunction(self, currentGameState, action):
+		successorGameState = currentGameState.generatePacmanSuccessor(action)
+		newPos = successorGameState.getPacmanPosition()
+		newFood = successorGameState.getFood()
+
+		#ghostPositions = successorGameState.getGhostPositions()
+
+		newGhostStates = successorGameState.getGhostStates()
+		newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+		legalMoves = currentGameState.getLegalActions()
+
+		"*** YOUR CODE HERE ***"
+
+		closestGhostIsScared = newGhostStates[0].scaredTimer > 0
+
+		closestGhostPosition = newGhostStates[0].configuration.pos
+		print('closestGhostPosition...', closestGhostPosition)
+
+		#closestGhostPosition = successorGameState.getGhostPosition(0)
+
+		#Não estamos utilizando o "closestGhost", logo, ele foi comentado.
+		#closestGhost = manhattanDistance(newPos, closestGhostPosition)
+		#print('closestGhost...', closestGhost)
+
+		newFoodPositions = newFood.asList()
+		foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
+
+		print('newFoodPositions...', newFoodPositions)
+		print('foodDistances...', foodDistances)
+
+		ghostListPosition = [ghostState.configuration.pos for ghostState in newGhostStates]
+		ghostDistances = [manhattanDistance(newPos, ghostPosition) for ghostPosition in ghostListPosition]
+
+		print('ghostListPosition...', ghostListPosition)
+		print('ghostDistances...', ghostDistances)
+
+		#ghostDistances = [manhattanDistance(newPos, ghostPosition) for ghostPosition in ghostPositions]
 
 
-    def getAction(self, gameState):
-        """
-        You do not need to change this method, but you're welcome to.
+		#max([manhattanDistance(ghostListPosition, foodPosition) for foodPosition in newFoodPositions])
 
-        getAction chooses among the best options according to the evaluation function.
+		# Select best actions given the state
+		#distancesToGhost = [manhattanDistance( pos, closestGhostPosition ) for pos in newPositions]
 
-        Just like in the previous project, getAction takes a GameState and returns
-        some Directions.X for some X in the set {North, South, West, East, Stop}
-        """
-        # Collect legal moves and successor states
-        legalMoves = gameState.getLegalActions()
 
-        # Choose one of the best actions
-        scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
-        bestScore = max(scores)
-        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
-        "Add more of your code here if you want to"
+		# Fantasma Não Assustado:
+				# -> Direção em que a comida está próxima dele, porém o mais distante do fantasma
+		# ELSE
+				# -> Direção em que a comida está próxima dele.
 
-        return legalMoves[chosenIndex]
+		if not closestGhostIsScared:
+			# movimentar-se para a comida mais próxima do pacman e mais longe do fantasma mais próximo
+			bestScore = [0,0] #AVALIAR!!!!
 
-    def evaluationFunction(self, currentGameState, action):
-        """
-        Design a better evaluation function here.
+			for foodPosition in newFoodPositions:
+				print('foodPosition...', foodPosition)
 
-        The evaluation function takes in the current and proposed successor
-        GameStates (pacman.py) and returns a number, where higher numbers are better.
+				if(successorGameState.hasFood(foodPosition[0], foodPosition[1])):
+					bestScore = max([manhattanDistance(closestGhostPosition, foodPosition)])
 
-        The code below extracts some useful information from the state, like the
-        remaining food (newFood) and Pacman position after moving (newPos).
-        newScaredTimes holds the number of moves that each ghost will remain
-        scared because of Pacman having eaten a power pellet.
+			#if(not successorGameState.isWin()):
+			#	bestScore = max([manhattanDistance(closestGhostPosition, foodPosition) for foodPosition in newFoodPositions])
+			#else:
+			#	bestScore = foodDistances[0]
 
-        Print out these variables to see what you're getting, then combine them
-        to create a masterful evaluation function.
-        """
-        # Useful information you can extract from a GameState (pacman.py)
-        successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-        "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+
+
+			#bestScore = ([manhattanDistance(closestGhostPosition, foodPosition) for foodPosition in newFoodPositions])
+
+			#if (successorGameState.hasFood(bestScore)):
+			#	successorGameState.isWin()
+
+		else:
+			bestScore = min( foodDistances )
+			#bestProb = self.prob_attack
+
+		#bestActions = [action for action, distance in zip( legalMoves, ghostDistances ) if distance == bestScore and (not successorGameState.isWin())]
+		bestActions = [action for action, distance in zip( legalMoves, ghostDistances ) if distance == bestScore]
+
+
+		# Atrás da comida
+		# Correr do fantasma no sentido oposto
+
+		# Calcular distância para a comida
+		#newFoodPositions = newFood.asList()
+		#foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
+
+		# Calcular distância para o fantasma
+
+		return successorGameState.getScore()
+
+	"""
+				Pra testar a implementação que vc colocar os seguintes comandos:
+				- python pacman.py -p ReflexAgent -l testClassic
+
+				Deste jeito vc roda só com um fantasminha, mas no ambiente do jogo:
+				- python pacman.py --frameTime 0.1 -p ReflexAgent -k 1
+
+				Deste jeito vc roda só com dois fantasminhas, mas no ambiente do jogo:
+				- python pacman.py --frameTime 0.1 -p ReflexAgent -k 2
+
+				E aqui vc roda a "prova".
+				- python autograder.py -q q1
+			"""
+
+	"""
+
+		# Useful information you can extract from a GameState (pacman.py)
+		successorGameState = currentGameState.generatePacmanSuccessor(action)
+		newPos = successorGameState.getPacmanPosition()
+		newFood = successorGameState.getFood()
+		newGhostStates = successorGameState.getGhostStates()
+		newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+
+		"*** YOUR CODE HERE ***"
+		score = 0
+
+		closestGhostPosition = newGhostStates[0].configuration.pos
+		closestGhost = manhattanDistance(newPos, closestGhostPosition)
+
+				"*** ghostListPosition = [ghostState.configuration.pos for ghostState in newGhostStates] ***"
+				"*** ghostDistances = [manhattanDistance(newPos, ghostListPosition) for ghostPosition in ghostListPosition] ***"
+
+		# Minimize distance from pacman to food
+		newFoodPositions = newFood.asList()
+		foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
+
+		if len(foodDistances) == 0:
+			return 0
+
+		closestFood = min(foodDistances)
+
+		# Stop action would reduce score because of the pacman's timer constraint
+		if action == 'Stop':
+			score -= 50
+
+		return successorGameState.getScore() + closestGhost / (closestFood * 10) + score
+
+	"""
+
 
 def scoreEvaluationFunction(currentGameState):
     """

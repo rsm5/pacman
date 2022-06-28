@@ -56,142 +56,58 @@ class ReflexAgent(Agent):
 		newPos = successorGameState.getPacmanPosition()
 		newFood = successorGameState.getFood()
 
-		#ghostPositions = successorGameState.getGhostPositions()
-
 		newGhostStates = successorGameState.getGhostStates()
-		newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-		legalMoves = currentGameState.getLegalActions()
 
 		"*** YOUR CODE HERE ***"
 
-		closestGhostIsScared = newGhostStates[0].scaredTimer > 0
+        #Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+		#       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 69
+
+        """
+			function SIMPLE-REFLEX-AGENT(percept) returns an action
+                persistent: rules, a set of condition–action rules
+
+                state ← I NTERPRET-INPUT(percept)
+                rule ← RULE-MATCH(state, rules)
+                action ← rule.ACTION
+                return action
+		"""
+
+        '''
+			Figure 2.10 A simple reflex agent. It acts according to a rule whose condition matches the
+            current state, as defined by the percept.
+		'''
+
 
 		closestGhostPosition = newGhostStates[0].configuration.pos
-		print('closestGhostPosition...', closestGhostPosition)
-
-		#closestGhostPosition = successorGameState.getGhostPosition(0)
-
-		#Não estamos utilizando o "closestGhost", logo, ele foi comentado.
-		#closestGhost = manhattanDistance(newPos, closestGhostPosition)
-		#print('closestGhost...', closestGhost)
 
 		newFoodPositions = newFood.asList()
 		foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
 
-		print('newFoodPositions...', newFoodPositions)
-		print('foodDistances...', foodDistances)
-
-		ghostListPosition = [ghostState.configuration.pos for ghostState in newGhostStates]
-		ghostDistances = [manhattanDistance(newPos, ghostPosition) for ghostPosition in ghostListPosition]
-
-		print('ghostListPosition...', ghostListPosition)
-		print('ghostDistances...', ghostDistances)
-
-		#ghostDistances = [manhattanDistance(newPos, ghostPosition) for ghostPosition in ghostPositions]
+		distancia = manhattanDistance(newPos, closestGhostPosition)
+		tmp2 = []
+		for i in range(len( closestGhostPosition)):
+				tmp2.append(closestGhostPosition[i]*10e6)
 
 
-		#max([manhattanDistance(ghostListPosition, foodPosition) for foodPosition in newFoodPositions])
+		lista = []
+		bestScore = 10e6
 
-		# Select best actions given the state
-		#distancesToGhost = [manhattanDistance( pos, closestGhostPosition ) for pos in newPositions]
-
-
-
-		# Fantasma Não Assustado:
-				# -> Direção em que a comida está próxima dele, porém o mais distante do fantasma
-		# ELSE
-				# -> Direção em que a comida está próxima dele.
-
-		if not closestGhostIsScared:
-			# movimentar-se para a comida mais próxima do pacman e mais longe do fantasma mais próximo
-			bestScore = [0,0] #AVALIAR!!!!
-
-			for foodPosition in newFoodPositions:
-				print('foodPosition...', foodPosition)
-
-				if(successorGameState.hasFood(foodPosition[0], foodPosition[1])):
-					bestScore = max([manhattanDistance(closestGhostPosition, foodPosition)])
-
-			#if(not successorGameState.isWin()):
-			#	bestScore = max([manhattanDistance(closestGhostPosition, foodPosition) for foodPosition in newFoodPositions])
-			#else:
-			#	bestScore = foodDistances[0]
-
-
-
-
-			#bestScore = ([manhattanDistance(closestGhostPosition, foodPosition) for foodPosition in newFoodPositions])
-
-			#if (successorGameState.hasFood(bestScore)):
-			#	successorGameState.isWin()
-
+		if len(foodDistances)==0:
+			bestScore= foodDistances
 		else:
-			bestScore = min( foodDistances )
-			#bestProb = self.prob_attack
+			if distancia<=2:
 
-		#bestActions = [action for action, distance in zip( legalMoves, ghostDistances ) if distance == bestScore and (not successorGameState.isWin())]
-		bestActions = [action for action, distance in zip( legalMoves, ghostDistances ) if distance == bestScore]
+				for i in range(len(newFoodPositions)):
+					di = manhattanDistance(tuple(tmp2), newFoodPositions[i])
+					lista.append(di)
+				var =  min(lista)
+				bestScore  -= var
+			else:
+				var2=  min(foodDistances)
+				bestScore -=  var2+ len(foodDistances)*100
 
-
-		# Atrás da comida
-		# Correr do fantasma no sentido oposto
-
-		# Calcular distância para a comida
-		#newFoodPositions = newFood.asList()
-		#foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
-
-		# Calcular distância para o fantasma
-
-		return successorGameState.getScore()
-
-	"""
-				Pra testar a implementação que vc colocar os seguintes comandos:
-				- python pacman.py -p ReflexAgent -l testClassic
-
-				Deste jeito vc roda só com um fantasminha, mas no ambiente do jogo:
-				- python pacman.py --frameTime 0.1 -p ReflexAgent -k 1
-
-				Deste jeito vc roda só com dois fantasminhas, mas no ambiente do jogo:
-				- python pacman.py --frameTime 0.1 -p ReflexAgent -k 2
-
-				E aqui vc roda a "prova".
-				- python autograder.py -q q1
-			"""
-
-	"""
-
-		# Useful information you can extract from a GameState (pacman.py)
-		successorGameState = currentGameState.generatePacmanSuccessor(action)
-		newPos = successorGameState.getPacmanPosition()
-		newFood = successorGameState.getFood()
-		newGhostStates = successorGameState.getGhostStates()
-		newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-
-		"*** YOUR CODE HERE ***"
-		score = 0
-
-		closestGhostPosition = newGhostStates[0].configuration.pos
-		closestGhost = manhattanDistance(newPos, closestGhostPosition)
-
-				"*** ghostListPosition = [ghostState.configuration.pos for ghostState in newGhostStates] ***"
-				"*** ghostDistances = [manhattanDistance(newPos, ghostListPosition) for ghostPosition in ghostListPosition] ***"
-
-		# Minimize distance from pacman to food
-		newFoodPositions = newFood.asList()
-		foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
-
-		if len(foodDistances) == 0:
-			return 0
-
-		closestFood = min(foodDistances)
-
-		# Stop action would reduce score because of the pacman's timer constraint
-		if action == 'Stop':
-			score -= 50
-
-		return successorGameState.getScore() + closestGhost / (closestFood * 10) + score
-
-	"""
+		return bestScore
 
 
 def scoreEvaluationFunction(currentGameState):
@@ -247,7 +163,73 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+		#Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+		#       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 196
+
+        """
+			function MINIMAX-SEARCH (game, state) returns an action
+				player ← game.TO-MOVE (state)
+				value, move ← MAX-VALUE (game, state)
+				return move
+
+			function MAX-VALUE (game, state) returns a (utility, move) pair
+				if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+				v, move ← −∞
+				for each a in game.ACTIONS (state) do
+					v2, a2 ← MIN-VALUE (game, game.RESULT (state, a))
+					if v2 > v then
+						v, move ← v2, a
+				return v, move
+
+			function MIN-VALUE (game, state) returns a (utility, move) pair
+				if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+				v, move ← +∞
+				for each a in game.ACTIONS (state) do
+					v2, a2 ← MAX-VALUE (game, game.RESULT (state, a))
+					if v2 < v then
+						v, move ← v2, a
+				return v, move
+		"""
+
+        '''
+			Figure 6.3 An algorithm for calculating the optimal move using minimax—the move that
+			leads to a terminal state with maximum utility, under the assumption that the opponent plays
+			to minimize utility. The functions MAX-VALUE and MIN-VALUE go through the whole
+			game tree, all the way to the leaves, to determine the backed-up value of a state and the move
+			to get there.
+		'''
+
+        def minimax(agent, depth, gameState):
+
+            is_terminated = gameState.isLose() or gameState.isWin() or (depth == self.depth)
+
+            if is_terminated:  # return the utility in case the defined depth is reached or the game is won/lost.
+                return self.evaluationFunction(gameState)
+            if agent == 0:  # maximize for pacman
+
+				# E SE TIVERMOS MAIS DE UM AGENTE?
+                return max(minimax(1, depth, gameState.generateSuccessor(agent, newState)) for newState in gameState.getLegalActions(agent))
+
+            else:  # minize for ghosts
+
+                nextAgent = agent + 1  # calculate the next agent and increase depth accordingly.
+                if gameState.getNumAgents() == nextAgent:
+                    nextAgent = 0
+                if nextAgent == 0:
+                   depth += 1
+                return min(minimax(nextAgent, depth, gameState.generateSuccessor(agent, newState)) for newState in gameState.getLegalActions(agent))
+
+        """Performing maximize action for the root node i.e. pacman"""
+        action = Directions.SOUTH
+        maximum = float("-inf")
+        for agentState in gameState.getLegalActions(0):
+            utility = minimax(1, 0, gameState.generateSuccessor(0, agentState))
+
+            if utility > maximum:
+                maximum, action = utility, agentState
+
+        return action
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -259,7 +241,99 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+
+		# Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+		#        http://ai.berkeley.edu/multiagent.html#Q2
+		#        Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 200
+
+        '''
+		function ALPHA-BETA-SEARCH (game, state) returns an action
+			player ← game.TO-MOVE (state)
+			value, move ← MAX-VALUE (game, state, −∞, +∞)
+			return move
+
+		function MAX-VALUE (game, state, α, β) returns a (utility, move) pair
+			if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+			v ← −∞
+			for each a in game.A CTIONS (state) do
+				v2, a2 ← MIN-VALUE (game, game.RESULT (state, a), α, β)
+				if v2 > v then
+					v, move ← v2, a
+					α ← MAX (α, v)
+				if v ≥ β then return v, move
+			return v, move
+
+		function MIN-VALUE (game, state, α, β) returns a (utility, move) pair
+			if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+			v ← +∞
+			for each a in game.ACTIONS (state) do
+				v2, a2 ← MAX-VALUE (game, game.RESULT (state, a), α, β)
+				if v2 < v then
+					v, move ← v2, a
+					β ← MIN (β, v)
+				if v ≤ α then return v, move
+			return v, move
+		'''
+
+
+        '''
+		Figure 6.7 The alpha–beta search algorithm. Notice that these functions are the same as the
+		MINIMAX-SEARCH functions in Figure 6.3, except that we maintain bounds in the variables
+		α and β, and use them to cut off search when a value is outside the bounds.
+		'''
+
+        def maximizer(agent, depth, game_state, alpha, beta):  # maximizer function
+            v = float("-inf")
+            for newState in game_state.getLegalActions(agent):
+                v = max(v, alphabetaprune(1, depth, game_state.generateSuccessor(agent, newState), alpha, beta))
+                if v > beta:
+                    return v
+                alpha = max(alpha, v)
+            return v
+
+        def minimizer(agent, depth, game_state, alpha, beta):  # minimizer function
+            v = float("inf")
+
+            next_agent = agent + 1  # calculate the next agent and increase depth accordingly.
+            if game_state.getNumAgents() == next_agent:
+                next_agent = 0
+            if next_agent == 0:
+                depth += 1
+
+            for newState in game_state.getLegalActions(agent):
+                v = min(v, alphabetaprune(next_agent, depth, game_state.generateSuccessor(agent, newState), alpha, beta))
+                if v < alpha:
+                    return v
+                beta = min(beta, v)
+            return v
+
+        def alphabetaprune(agent, depth, game_state, alpha, beta):
+            is_terminated = game_state.isLose() or game_state.isWin() or (depth == self.depth)
+            if is_terminated:  # return the utility in case the defined depth is reached or the game is won/lost.
+                return self.evaluationFunction(game_state)
+
+            if agent == 0:  # maximize for pacman
+                return maximizer(agent, depth, game_state, alpha, beta)
+            else:  # minimize for ghosts
+                return minimizer(agent, depth, game_state, alpha, beta)
+
+        """Performing maximizer function to the root node i.e. pacman using alpha-beta pruning."""
+        action = Directions.SOUTH
+        score = float("-inf")
+        alpha = float("-inf")
+        beta = float("inf")
+        for agentState in gameState.getLegalActions(0):
+            ghostValue = alphabetaprune(1, 0, gameState.generateSuccessor(0, agentState), alpha, beta)
+            if ghostValue > score:
+                score = ghostValue
+                action = agentState
+            if score > beta:
+                return score
+            alpha = max(alpha, score)
+
+        return action
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """

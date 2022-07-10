@@ -20,94 +20,94 @@ import random, util
 from game import Agent
 
 class ReflexAgent(Agent):
-	"""
-		A reflex agent chooses an action at each choice point by examining
-		its alternatives via a state evaluation function.
+    """
+        A reflex agent chooses an action at each choice point by examining
+        its alternatives via a state evaluation function.
 
-		The code below is provided as a guide.  You are welcome to change
-		it in any way you see fit, so long as you don't touch our method
-		headers.
-	"""
+        The code below is provided as a guide.  You are welcome to change
+        it in any way you see fit, so long as you don't touch our method
+        headers.
+    """
 
-	def getAction(self, gameState):
-		"""
-		You do not need to change this method, but you're welcome to.
+    def getAction(self, gameState):
+        """
+        You do not need to change this method, but you're welcome to.
 
-		getAction chooses among the best options according to the evaluation function.
+        getAction chooses among the best options according to the evaluation function.
 
-		Just like in the previous project, getAction takes a GameState and returns
-		some Directions.X for some X in the set {North, South, West, East, Stop}
-		"""
-		# Collect legal moves and successor states
-		legalMoves = gameState.getLegalActions()
+        Just like in the previous project, getAction takes a GameState and returns
+        some Directions.X for some X in the set {North, South, West, East, Stop}
+        """
+        # Collect legal moves and successor states
+        legalMoves = gameState.getLegalActions()
 
-		# Choose one of the best actions
-		scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
-		bestScore = max(scores)
-		bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-		chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        # Choose one of the best actions
+        scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
+        bestScore = max(scores)
+        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
-		"Add more of your code here if you want to"
+        "Add more of your code here if you want to"
 
-		return legalMoves[chosenIndex]
+        return legalMoves[chosenIndex]
 
-	def evaluationFunction(self, currentGameState, action):
-		successorGameState = currentGameState.generatePacmanSuccessor(action)
-		newPos = successorGameState.getPacmanPosition()
-		newFood = successorGameState.getFood()
+    def evaluationFunction(self, currentGameState, action):
+        successorGameState = currentGameState.generatePacmanSuccessor(action)
+        newPos = successorGameState.getPacmanPosition()
+        newFood = successorGameState.getFood()
 
-		newGhostStates = successorGameState.getGhostStates()
+        newGhostStates = successorGameState.getGhostStates()
 
-		"*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***"
 
         #Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
-		#       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 69
+        #       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 69
 
         """
-			function SIMPLE-REFLEX-AGENT(percept) returns an action
+            function SIMPLE-REFLEX-AGENT(percept) returns an action
                 persistent: rules, a set of condition–action rules
 
                 state ← I NTERPRET-INPUT(percept)
                 rule ← RULE-MATCH(state, rules)
                 action ← rule.ACTION
                 return action
-		"""
+        """
 
         '''
-			Figure 2.10 A simple reflex agent. It acts according to a rule whose condition matches the
+            Figure 2.10 A simple reflex agent. It acts according to a rule whose condition matches the
             current state, as defined by the percept.
-		'''
+        '''
 
 
-		closestGhostPosition = newGhostStates[0].configuration.pos
+        closestGhostPosition = newGhostStates[0].configuration.pos
 
-		newFoodPositions = newFood.asList()
-		foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
+        newFoodPositions = newFood.asList()
+        foodDistances = [manhattanDistance(newPos, foodPosition) for foodPosition in newFoodPositions]
 
-		distancia = manhattanDistance(newPos, closestGhostPosition)
-		tmp2 = []
-		for i in range(len( closestGhostPosition)):
-				tmp2.append(closestGhostPosition[i]*10e6)
+        distancia = manhattanDistance(newPos, closestGhostPosition)
+        tmp2 = []
+        for i in range(len( closestGhostPosition)):
+            tmp2.append(closestGhostPosition[i]*10e6)
 
 
-		lista = []
-		bestScore = 10e6
+        lista = []
+        bestScore = 10e6
 
-		if len(foodDistances)==0:
-			bestScore= foodDistances
-		else:
-			if distancia<=2:
+        if len(foodDistances)==0:
+            bestScore= foodDistances
+        else:
+            if distancia<=2:
 
-				for i in range(len(newFoodPositions)):
-					di = manhattanDistance(tuple(tmp2), newFoodPositions[i])
-					lista.append(di)
-				var =  min(lista)
-				bestScore  -= var
-			else:
-				var2=  min(foodDistances)
-				bestScore -=  var2+ len(foodDistances)*100
+                for i in range(len(newFoodPositions)):
+                    di = manhattanDistance(tuple(tmp2), newFoodPositions[i])
+                    lista.append(di)
+                var =  min(lista)
+                bestScore  -= var
+            else:
+                var2=  min(foodDistances)
+                bestScore -=  var2+ len(foodDistances)*100
 
-		return bestScore
+        return bestScore
 
 
 def scoreEvaluationFunction(currentGameState):
@@ -164,41 +164,41 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         # util.raiseNotDefined()
-		#Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
-		#       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 196
+        #Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+        #       Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 196
 
         """
-			function MINIMAX-SEARCH (game, state) returns an action
-				player ← game.TO-MOVE (state)
-				value, move ← MAX-VALUE (game, state)
-				return move
+            function MINIMAX-SEARCH (game, state) returns an action
+                player ← game.TO-MOVE (state)
+                value, move ← MAX-VALUE (game, state)
+                return move
 
-			function MAX-VALUE (game, state) returns a (utility, move) pair
-				if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
-				v, move ← −∞
-				for each a in game.ACTIONS (state) do
-					v2, a2 ← MIN-VALUE (game, game.RESULT (state, a))
-					if v2 > v then
-						v, move ← v2, a
-				return v, move
+            function MAX-VALUE (game, state) returns a (utility, move) pair
+                if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+                v, move ← −∞
+                for each a in game.ACTIONS (state) do
+                    v2, a2 ← MIN-VALUE (game, game.RESULT (state, a))
+                    if v2 > v then
+                        v, move ← v2, a
+                return v, move
 
-			function MIN-VALUE (game, state) returns a (utility, move) pair
-				if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
-				v, move ← +∞
-				for each a in game.ACTIONS (state) do
-					v2, a2 ← MAX-VALUE (game, game.RESULT (state, a))
-					if v2 < v then
-						v, move ← v2, a
-				return v, move
-		"""
+            function MIN-VALUE (game, state) returns a (utility, move) pair
+                if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+                v, move ← +∞
+                for each a in game.ACTIONS (state) do
+                    v2, a2 ← MAX-VALUE (game, game.RESULT (state, a))
+                    if v2 < v then
+                        v, move ← v2, a
+                return v, move
+        """
 
         '''
-			Figure 6.3 An algorithm for calculating the optimal move using minimax—the move that
-			leads to a terminal state with maximum utility, under the assumption that the opponent plays
-			to minimize utility. The functions MAX-VALUE and MIN-VALUE go through the whole
-			game tree, all the way to the leaves, to determine the backed-up value of a state and the move
-			to get there.
-		'''
+            Figure 6.3 An algorithm for calculating the optimal move using minimax—the move that
+            leads to a terminal state with maximum utility, under the assumption that the opponent plays
+            to minimize utility. The functions MAX-VALUE and MIN-VALUE go through the whole
+            game tree, all the way to the leaves, to determine the backed-up value of a state and the move
+            to get there.
+        '''
 
         def minimax(agent, depth, gameState):
 
@@ -208,7 +208,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 return self.evaluationFunction(gameState)
             if agent == 0:  # maximize for pacman
 
-				# E SE TIVERMOS MAIS DE UM AGENTE?
+                # E SE TIVERMOS MAIS DE UM AGENTE?
                 return max(minimax(1, depth, gameState.generateSuccessor(agent, newState)) for newState in gameState.getLegalActions(agent))
 
             else:  # minize for ghosts
@@ -243,45 +243,45 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         #util.raiseNotDefined()
 
-		# Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
-		#        http://ai.berkeley.edu/multiagent.html#Q2
-		#        Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 200
+        # Fonte: https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+        #        http://ai.berkeley.edu/multiagent.html#Q2
+        #        Artificial Intelligence A Modern Approach, Global Edition (Stuart J. Russell, Peter Norvig) (z-lib.org) - página 200
 
         '''
-		function ALPHA-BETA-SEARCH (game, state) returns an action
-			player ← game.TO-MOVE (state)
-			value, move ← MAX-VALUE (game, state, −∞, +∞)
-			return move
+        function ALPHA-BETA-SEARCH (game, state) returns an action
+            player ← game.TO-MOVE (state)
+            value, move ← MAX-VALUE (game, state, −∞, +∞)
+            return move
 
-		function MAX-VALUE (game, state, α, β) returns a (utility, move) pair
-			if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
-			v ← −∞
-			for each a in game.A CTIONS (state) do
-				v2, a2 ← MIN-VALUE (game, game.RESULT (state, a), α, β)
-				if v2 > v then
-					v, move ← v2, a
-					α ← MAX (α, v)
-				if v ≥ β then return v, move
-			return v, move
+        function MAX-VALUE (game, state, α, β) returns a (utility, move) pair
+            if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+            v ← −∞
+            for each a in game.A CTIONS (state) do
+                v2, a2 ← MIN-VALUE (game, game.RESULT (state, a), α, β)
+                if v2 > v then
+                    v, move ← v2, a
+                    α ← MAX (α, v)
+                if v ≥ β then return v, move
+            return v, move
 
-		function MIN-VALUE (game, state, α, β) returns a (utility, move) pair
-			if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
-			v ← +∞
-			for each a in game.ACTIONS (state) do
-				v2, a2 ← MAX-VALUE (game, game.RESULT (state, a), α, β)
-				if v2 < v then
-					v, move ← v2, a
-					β ← MIN (β, v)
-				if v ≤ α then return v, move
-			return v, move
-		'''
+        function MIN-VALUE (game, state, α, β) returns a (utility, move) pair
+            if game.IS-TERMINAL (state) then return game.UTILITY (state, player), null
+            v ← +∞
+            for each a in game.ACTIONS (state) do
+                v2, a2 ← MAX-VALUE (game, game.RESULT (state, a), α, β)
+                if v2 < v then
+                    v, move ← v2, a
+                    β ← MIN (β, v)
+                if v ≤ α then return v, move
+            return v, move
+        '''
 
 
         '''
-		Figure 6.7 The alpha–beta search algorithm. Notice that these functions are the same as the
-		MINIMAX-SEARCH functions in Figure 6.3, except that we maintain bounds in the variables
-		α and β, and use them to cut off search when a value is outside the bounds.
-		'''
+        Figure 6.7 The alpha–beta search algorithm. Notice that these functions are the same as the
+        MINIMAX-SEARCH functions in Figure 6.3, except that we maintain bounds in the variables
+        α and β, and use them to cut off search when a value is outside the bounds.
+        '''
 
         def maximizer(agent, depth, game_state, alpha, beta):  # maximizer function
             v = float("-inf")
@@ -348,7 +348,57 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #
+        # Fonte: https://github.com/karlapalem/UC-Berkeley-AI-Pacman-Project/blob/master/multiagent/multiAgents.py
+        #        https://github.com/PointerFLY/Pacman-AI/blob/master/multiagent/multiAgents.py
+        #        https://github.com/iamjagdeesh/Artificial-Intelligence-Pac-Man/blob/master/Project%202%20Multi-Agent%20Pacman/multiAgents.py
+        #        BBEEL, Pieter; KLEIN, Dan. Uncertainty and Utilities - CS 188: Artificial Intelligence. University of California, Berkeley. Disponível em: https://inst.eecs.berkeley.edu/~cs188/fa18/assets/slides/lec7/FA18_cs188_lecture7_expectimax_search_and_utilities.pptx
+
+        def maxLevel(gameState,depth):
+            currDepth = depth + 1
+            if gameState.isWin() or gameState.isLose() or currDepth==self.depth:   #Terminal Test
+                return self.evaluationFunction(gameState)
+            maxvalue = float("-inf")
+            actions = gameState.getLegalActions(0)
+
+            for action in actions:
+                successor= gameState.generateSuccessor(0,action)
+                maxvalue = max (maxvalue,expectLevel(successor,currDepth,1))
+            return maxvalue
+
+        def expectLevel(gameState,depth, agentIndex):
+            if gameState.isWin() or gameState.isLose():   #Terminal Test
+                return self.evaluationFunction(gameState)
+            actions = gameState.getLegalActions(agentIndex)
+            totalexpectedvalue = 0
+            numberofactions = len(actions)
+
+            for action in actions:
+                successor= gameState.generateSuccessor(agentIndex,action)
+                if agentIndex == (gameState.getNumAgents() - 1):
+                    expectedvalue = maxLevel(successor,depth)
+                else:
+                    expectedvalue = expectLevel(successor,depth,agentIndex+1)
+                totalexpectedvalue = totalexpectedvalue + expectedvalue
+            if numberofactions == 0:
+                return  0
+            return float(totalexpectedvalue)/float(numberofactions)
+
+        #Root level action.
+        actions = gameState.getLegalActions(0)
+        currentScore = float("-inf")
+        returnAction = Directions.SOUTH
+        for action in actions:
+            nextState = gameState.generateSuccessor(0,action)
+            # Next level is a expect level. Hence calling expectLevel for successors of the root.
+            score = expectLevel(nextState,0,1)
+            # Choosing the action which is Maximum of the successors.
+            if score > currentScore:
+                returnAction = action
+                currentScore = score
+        return returnAction
+
+
 
 def betterEvaluationFunction(currentGameState):
     """
